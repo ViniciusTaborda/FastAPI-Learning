@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from models import Profile, Product, User
+from models import Profile, Product, User, Offer
 
 app = FastAPI()
 
@@ -8,6 +8,12 @@ app = FastAPI()
 def add_user(profile: Profile):
 
     return {"name": profile.name, "email": profile.email, "age": profile.age}
+
+
+@app.post("/add/offer/")
+def add_offer(offer: Offer):
+
+    return {offer}
 
 
 @app.post("/add/product/{product_id}")
