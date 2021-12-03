@@ -1,5 +1,8 @@
-from pydantic import BaseModel, Field, HttpUrl
+from datetime import date
 from typing import Set, List
+from pydantic import BaseModel, Field, HttpUrl
+
+from uuid import UUID
 
 
 class Profile(BaseModel):
@@ -13,8 +16,13 @@ class Image(BaseModel):
     name: str
 
 
+class Event(BaseModel):
+    event_id: UUID
+    start_date: date
+
+
 class Product(BaseModel):
-    name: str
+    name: str = Field(example="Example name")
     price: float = Field(
         title="Price of the item",
         description="Price of the item added into the system",
@@ -22,7 +30,7 @@ class Product(BaseModel):
     )
     discount: float
     discounted_price: float
-    tags: Set[str]
+    tags: Set[str] = Field(example={"eletronic", "cpu"})
     images: List[Image]
 
     class Config:
@@ -30,6 +38,12 @@ class Product(BaseModel):
             "name": "Phone",
             "price": 100,
             "discount": 0,
+            "discounted_price": 0,
+            "tags": ["Eletronics", "Computers"],
+            "images": [
+                {"url": "http://www.test_url.com" "name" "Phone image"},
+                {"url": "http://www.test_url.com" "name" "Phone image side view"},
+            ],
         }
 
 

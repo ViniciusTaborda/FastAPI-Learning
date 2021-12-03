@@ -1,7 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 from models import Profile, Product, User, Offer
 
 app = FastAPI()
+
+
+@app.post("/login")
+def login(username: str = Form(...), password: str = Form(...)):
+    return {"username": username}
 
 
 @app.post("/add/user/")
