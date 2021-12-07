@@ -2,3 +2,6 @@ fastapi
 sqlalchemy
 uvicorn
 pydantic
+passlib
+bcrypt
+email-validator
