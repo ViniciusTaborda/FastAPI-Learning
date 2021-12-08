@@ -1,21 +1,21 @@
 from fastapi import APIRouter
-from fastapi import FastAPI, Response, status, HTTPException
+from fastapi import Response, status, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.orm.session import Session
 import models, schemas
 from database import get_db
 
-router = APIRouter()
+router = APIRouter(tags=["Products"], prefix="/product")
 
 
-@router.get("/product", tags={"Products"})
+@router.get("/")
 def list_products(db: Session = Depends(get_db)):
     products = db.query(models.Product).all()
 
     return products
 
 
-@router.get("/product/{id}", tags={"Products"})
+@router.get("/{id}")
 def retrieve_product(response: Response, id: int, db: Session = Depends(get_db)):
     product = db.query(models.Product).filter(models.Product.id == id).first()
     if not product:
@@ -27,7 +27,7 @@ def retrieve_product(response: Response, id: int, db: Session = Depends(get_db))
     return product
 
 
-@router.delete("/product/{id}", tags={"Products"})
+@router.delete("/{id}")
 def delete_product(id: int, db: Session = Depends(get_db)):
     product = (
         db.query(models.Product)
@@ -38,7 +38,7 @@ def delete_product(id: int, db: Session = Depends(get_db)):
     return product
 
 
-@router.put("/product/{id}", tags={"Products"})
+@router.put("/{id}")
 def update_product(request: schemas.Product, id: int, db: Session = Depends(get_db)):
     product = (
         db.query(models.Product).filter(models.Product.id == id).update(request.dict())
@@ -48,7 +48,7 @@ def update_product(request: schemas.Product, id: int, db: Session = Depends(get_
 
 
 @router.post(
-    "/product",
+    "/",
     response_model=schemas.DisplayProduct,
     status_code=status.HTTP_201_CREATED,
     tags={"Products"},

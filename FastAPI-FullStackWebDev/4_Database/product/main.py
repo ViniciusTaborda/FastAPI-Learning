@@ -1,10 +1,7 @@
-from fastapi import FastAPI, Response, status, HTTPException
-from fastapi.params import Depends
-from sqlalchemy.orm.session import Session
-import models, schemas
-from database import engine, get_db
-from passlib.context import CryptContext
-from routers import product
+from fastapi import FastAPI
+import models
+from database import engine
+from routers import product, seller
 
 app = FastAPI(
     title="Products API",
@@ -19,24 +16,6 @@ app = FastAPI(
 )
 
 app.include_router(product.router)
+app.include_router(seller.router)
 
 models.base.metadata.create_all(engine)
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-@app.post(
-    "/seller",
-    response_model=schemas.DisplaySeller,
-    status_code=status.HTTP_201_CREATED,
-    tags={"Seller"},
-)
-def add_seller(request: schemas.Seller, db: Session = Depends(get_db)):
-    hashed_password = pwd_context.hash(request.password)
-    new_seller = models.Seller(
-        username=request.username, email=request.email, password=hashed_password
-    )
-    db.add(new_seller)
-    db.commit()
-    db.refresh(new_seller)
-    return new_seller

@@ -1,7 +1,5 @@
-from itertools import product
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from starlette.routing import replace_params
 from database import base
 
 
