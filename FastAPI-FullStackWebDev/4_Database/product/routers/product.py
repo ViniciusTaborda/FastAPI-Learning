@@ -3,20 +3,30 @@ from fastapi import Response, status, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.orm.session import Session
 import models, schemas
+from routers.login import get_current_user
 from database import get_db
+
 
 router = APIRouter(tags=["Products"], prefix="/product")
 
 
 @router.get("/")
-def list_products(db: Session = Depends(get_db)):
+def list_products(
+    db: Session = Depends(get_db),
+    current_user: schemas.Seller = Depends(get_current_user),
+):
     products = db.query(models.Product).all()
 
     return products
 
 
 @router.get("/{id}")
-def retrieve_product(response: Response, id: int, db: Session = Depends(get_db)):
+def retrieve_product(
+    response: Response,
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: schemas.Seller = Depends(get_current_user),
+):
     product = db.query(models.Product).filter(models.Product.id == id).first()
     if not product:
         raise HTTPException(

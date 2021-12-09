@@ -25,7 +25,10 @@ def generate_token(data: dict):
 
 
 @router.post("/login")
-def login(request: schemas.Login, db: Session = Depends(database.get_db)):
+def login(
+    request: oauth2.OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(database.get_db),
+):
     seller = (
         db.query(models.Seller)
         .filter(models.Seller.username == request.username)
@@ -49,10 +52,18 @@ def login(request: schemas.Login, db: Session = Depends(database.get_db)):
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_excepetion = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="unauthorized",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
-            raise ...
-    except:
-        ...
+            raise credentials_excepetion
+        token_data = schemas.TokenData(username=username)
+    except JWTError:
+        raise credentials_excepetion
+    else:
+        return token_data
