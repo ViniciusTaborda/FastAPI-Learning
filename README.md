@@ -1,2 +1,3 @@
 # FastAPI-Learning
-In this repo I will publish simple examples, samples and tryouts with the FastAPI python framework.
+In this repo I will publish simple examples, samples and tryouts with the FastAPI 
+python framework, SQLAlchemy and OAuth.
