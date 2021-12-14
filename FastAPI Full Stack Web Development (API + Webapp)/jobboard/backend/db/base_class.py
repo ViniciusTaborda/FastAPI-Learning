@@ -6,5 +6,6 @@ class Base:
     id: Any
     __name__: str
 
+    @declared_attr
     def __table__(cls)->str:
         return cls.__name__.lower()
