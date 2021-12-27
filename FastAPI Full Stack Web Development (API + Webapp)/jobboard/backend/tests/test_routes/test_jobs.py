@@ -28,5 +28,4 @@ def test_retreive_by_id(client):
     response_post = client.post("/job/create-job", json.dumps(data))
     assert response_post.status_code == 200
     response = client.get("/job/get/1")
-    print(response.json())
     assert response.status_code == 200

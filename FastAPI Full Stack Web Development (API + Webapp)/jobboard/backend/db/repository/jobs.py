@@ -16,8 +16,8 @@ def retreive_job(id: int, db: Session):
     return db.query(Job).filter(Job.id == id).first()
 
 
-def delete_job(id: int, db: Session):
-    return db.query(Job).filter(Job.id == id).delete()
+def delete_job(id: int, owner_id: int, db: Session):
+    return db.query(Job).filter(Job.id == id, Job.owner_id == owner_id).delete()
 
 
 def list_jobs(db: Session):
